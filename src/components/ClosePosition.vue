@@ -14,30 +14,40 @@ export default {
     return {};
   },
   methods: {
-    async getOrder() {
-      const expires = this.getExpires();
-      const signature = this.getSignature(
-        "POST",
-        "/api/v1/order/closePosition?filter={'symbol': 'XBTUSD'}'"
-      );
+    getOrder() {
+      var verb = "POST",
+        path = "/api/v1/order/closePosition",
+        expires = this.getExpires(),
+        data = { symbol: "XBTUSD" };
 
-      const headers = {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
+      var postBody = JSON.stringify(data);
+      const signature = this.getSignature(verb, path, postBody);
+
+      console.log(signature);
+
+      var headers = {
+        "content-type": "application/json",
+        Accept: "application/json",
+        "X-Requested-With": "XMLHttpRequest",
+        // This example uses the 'expires' scheme. You can also use the 'nonce' scheme. See
+        // https://www.bitmex.com/app/apiKeysUsage for more details.
         "api-expires": expires,
         "api-key": Api.apiId,
-        "api-signature": signature,
-        Accept: "application/json",
-        "X-Requested-With": "XMLHttpRequest"
+        "api-signature": signature
       };
 
-      axios
-        .post(
-          "https://cryptic-headland-94862.herokuapp.com/https://testnet.bitmex.com/api/v1/order/closePosition",
-          {
-            headers: headers
-          }
-        )
+      const requestOptions = {
+        headers: headers,
+        //  url: "https://testnet.bitmex.com" + "/api/v1/order/cancelAllAfter",
+        method: "POST",
+        body: postBody
+      };
+
+      fetch(
+        "http://cryptic-headland-94862.herokuapp.com/https://testnet.bitmex.com" +
+          path,
+        requestOptions
+      )
         .then(function(response) {
           // handle success
           console.log(response);

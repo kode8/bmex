@@ -1,11 +1,11 @@
 import { Api } from "api";
 import Crypto from "crypto";
 
-const getSignature = (verb, path) =>  {
+const getSignature = (verb, path, data = '') =>  {
     const expires = getExpires();
     return Crypto
       .createHmac("sha256", Api.secret)
-      .update(verb + path + expires)
+      .update(verb + path + expires + data)
       .digest("hex");
 };
 

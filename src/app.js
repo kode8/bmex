@@ -5,11 +5,11 @@ import App from './App.vue';
 
 Vue.mixin({
   methods: {
-    getSignature(verb, path) {
+    getSignature(verb, path, data = '') {
       const expires = this.getExpires();
       return Crypto
         .createHmac("sha256", Api.secret)
-        .update(verb + path + expires)
+        .update(verb + path + expires + data)
         .digest("hex");
     },
     getExpires() {
