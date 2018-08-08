@@ -1,13 +1,18 @@
 const path = require('path');
-
-const { VueLoaderPlugin } = require('vue-loader')
+const webpack = require('webpack');
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
   mode: 'development',
-  entry: './src/app.js',
+  entry: ['babel-polyfill', './src/app.js'],
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'app.bundle.js'
+  },
+  resolve: {
+    alias: {
+      api: path.resolve(__dirname, 'src/api/')
+    }
   },
   module: {
     rules: [
@@ -44,7 +49,10 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
-    port: 9000
+    port: 9000,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
   },
   plugins: [
     new VueLoaderPlugin()
